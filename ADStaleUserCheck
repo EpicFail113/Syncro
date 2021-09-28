@@ -1,1 +1,12 @@
 #Run through all of AD and see if there are any users that have not logged in for x number of days and shoot an email out.
+Import-Module $env:SyncroModule
+$StaleUsers = Get-ADUser -Filter * -Properties Name,Enabled,LastLogonDate | Where-Object {$_.Enabled -eq $True -and $_.LastLogonDate -lt (Get-Date).AddDays(-90)}
+if ($StaleUsers)
+    {
+    Send-Email -To "$email" -Subject "$client has stale users" -BodyAsHtml -Body "$($StaleUsers | ForEach-Object {$_.Name; $_.LastLogonDate; echo '<br />'})"
+    echo "Found stale users"
+    }
+    else
+    {
+        "Found no stale users"
+    }
