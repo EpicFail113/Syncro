@@ -1,0 +1,1 @@
+#Sends out an alert if asset does not check into Syncro for longer than x amount of days.
